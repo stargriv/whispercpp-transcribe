@@ -95,8 +95,10 @@ make download-model MODEL_SIZE=medium   # ~1.5 GB
 To extract audio from an MP4 file to WAV format (16kHz, mono - compatible with whisper-cpp):
 
 ```bash
-make extract INPUT=files/your-video.mp4 OUTPUT=files/output.wav
+make extract INPUT=files/your-video.mp4
 ```
+
+The Makefile derives output names automatically based on the input basename (e.g., `files/your-video.wav`).
 
 ### Transcribe Audio to Text
 
@@ -106,7 +108,7 @@ To transcribe a WAV file to text using Russian language:
 make transcribe INPUT=files/output.wav
 ```
 
-This will create `files/output.txt` with the transcription.
+This will create `files/output.txt` (same basename, `.txt` extension) with the transcription.
 
 ### Complete Pipeline
 
@@ -119,6 +121,8 @@ make all INPUT=files/your-video.mp4
 This will:
 1. Extract audio to `files/your-video.wav`
 2. Transcribe to `files/your-video.txt`
+
+You can also run the same two-step flow explicitly via `make process INPUT=files/your-video.mp4`.
 
 ### Clean Output Files
 
@@ -135,6 +139,7 @@ Edit the `Makefile` to configure:
 - `LANGUAGE`: Language for transcription (default: `ru` for Russian)
 - `THREADS`: Number of CPU threads to use (default: `4`)
 - `WHISPER_CPP_PATH`: Path to source build (default: `../whisper.cpp`)
+- `INPUT`: Default input file when not provided (default: `files/input.mp4`)
 
 ### Whisper-CLI Parameters Used
 
@@ -142,6 +147,9 @@ The Makefile uses the following whisper-cli parameters:
 - `-m` / `--model`: Path to the GGML model file
 - `-l` / `--language`: Language code (`ru` for Russian, `en` for English, etc.)
 - `-t` / `--threads`: Number of threads for computation
+- `-mc 0`: Disable max-context truncation
+- `-sow`: Enable start-of-word timestamps
+- `-ml 0`: Disable max-segment-length truncation
 - `-otxt` / `--output-txt`: Generate text output file
 - `-of` / `--output-file`: Output file path (without extension)
 
