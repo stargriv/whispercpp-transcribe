@@ -73,7 +73,7 @@ download-model:
 # Extract audio from MP4 to WAV (16kHz, mono, compatible with whisper-cpp)
 extract:
 	@echo "Extracting audio from $(INPUT) to $(WAV_FILE)..."
-	@ffmpeg -i $(INPUT) -ar 16000 -ac 1 -c:a pcm_s16le $(WAV_FILE) -y
+	@ffmpeg -i "$(INPUT)" -ar 16000 -ac 1 -c:a pcm_s16le "$(WAV_FILE)" -y
 	@echo "Audio extracted successfully to $(WAV_FILE)"
 
 # Transcribe WAV file to text using whisper-cli or whisper.cpp
@@ -90,13 +90,13 @@ transcribe:
 		echo "Download with: make download-model MODEL_SIZE=large-v3"; \
 		exit 1; \
 	fi
-	@$(WHISPER_CMD) $(WHISPER_ARGS) $(WAV_FILE)
+	@$(WHISPER_CMD) $(WHISPER_ARGS) "$(WAV_FILE)"
 	@echo "Transcription completed: $(TXT_FILE)"
 
 # Extract and transcribe with custom input
 process:
-	@$(MAKE) extract INPUT=$(INPUT)
-	@$(MAKE) transcribe INPUT=$(INPUT)
+	@$(MAKE) extract INPUT="$(INPUT)"
+	@$(MAKE) transcribe INPUT="$(INPUT)"
 
 # Clean generated files
 clean:
